@@ -1,0 +1,967 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Abhishant Kumar — QA Automation Engineer</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --cyan:#00fff5;--green:#39ff14;--red:#ff2d55;--orange:#ff9500;
+  --bg:#020408;--surface:#080f18;--surface2:#0c1824;
+  --border:rgba(0,255,245,0.12);--text:#c8e8f0;--dim:#4a7080;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--bg);color:var(--text);font-family:'Inter',sans-serif;overflow-x:hidden;}
+
+/* CURSOR */
+.cursor{width:8px;height:8px;background:var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9999;mix-blend-mode:difference;transition:transform 0.1s;}
+.cursor-ring{width:32px;height:32px;border:1px solid var(--cyan);border-radius:50%;position:fixed;pointer-events:none;z-index:9998;opacity:0.5;transition:all 0.15s ease;}
+
+/* GRID + SCAN */
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(0,255,245,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(0,255,245,0.03) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.08) 2px,rgba(0,0,0,0.08) 4px);pointer-events:none;z-index:1;opacity:0.4;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:18px 60px;background:rgba(2,4,8,0.92);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);}
+.nav-logo{font-family:'Space Mono',monospace;color:var(--cyan);font-size:13px;letter-spacing:2px;}
+.nav-links{display:flex;gap:26px;list-style:none;}
+.nav-links a{color:var(--dim);text-decoration:none;font-size:10px;letter-spacing:3px;text-transform:uppercase;transition:color 0.3s;font-family:'Space Mono',monospace;}
+.nav-links a:hover{color:var(--cyan);}
+.nav-right{display:flex;align-items:center;gap:20px;}
+.nav-status{display:flex;align-items:center;gap:8px;font-family:'Space Mono',monospace;font-size:11px;color:var(--green);}
+.status-dot{width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(57,255,20,0.4);}50%{opacity:0.6;box-shadow:0 0 0 6px rgba(57,255,20,0);}}
+
+/* RESUME DOWNLOAD BUTTON IN NAV */
+.nav-resume{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--cyan);border:1px solid var(--cyan);padding:8px 16px;text-decoration:none;transition:all 0.3s;position:relative;overflow:hidden;cursor:pointer;}
+.nav-resume::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-101%);transition:transform 0.3s;}
+.nav-resume:hover::before{transform:translateX(0);}
+.nav-resume:hover{color:var(--bg);}
+.nav-resume span{position:relative;}
+
+/* HERO */
+#hero{min-height:100vh;display:flex;flex-direction:column;justify-content:center;padding:140px 60px 80px;position:relative;z-index:2;overflow:hidden;}
+.hero-eyebrow{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:6px;color:var(--cyan);text-transform:uppercase;margin-bottom:30px;opacity:0;animation:fadeUp 0.8s 0.2s forwards;}
+.hero-name{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(56px,9vw,130px);line-height:0.9;letter-spacing:-3px;margin-bottom:30px;opacity:0;animation:fadeUp 0.8s 0.4s forwards;}
+.hero-name span{display:block;color:transparent;-webkit-text-stroke:1px var(--cyan);}
+.hero-title{font-size:clamp(14px,1.8vw,18px);color:var(--dim);max-width:560px;line-height:1.7;margin-bottom:50px;opacity:0;animation:fadeUp 0.8s 0.6s forwards;}
+.hero-title strong{color:var(--text);}
+.hero-cta{display:flex;gap:16px;flex-wrap:wrap;opacity:0;animation:fadeUp 0.8s 0.8s forwards;}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:13px 28px;font-family:'Space Mono',monospace;font-size:11px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid var(--cyan);color:var(--cyan);background:transparent;cursor:pointer;transition:all 0.3s;position:relative;overflow:hidden;}
+.btn::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-101%);transition:transform 0.3s;}
+.btn:hover::before{transform:translateX(0);}
+.btn:hover{color:var(--bg);}
+.btn span{position:relative;}
+.btn-ghost{border-color:var(--border);color:var(--dim);}
+.btn-ghost::before{background:var(--surface2);}
+.btn-ghost:hover{color:var(--text);}
+.btn-green{border-color:var(--green);color:var(--green);}
+.btn-green::before{background:var(--green);}
+.btn-green:hover{color:var(--bg);}
+.hero-stats{position:absolute;right:60px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column;gap:30px;opacity:0;animation:fadeLeft 0.8s 1s forwards;}
+.stat{text-align:right;border-right:2px solid var(--border);padding-right:24px;}
+.stat-num{font-family:'Space Mono',monospace;font-size:36px;font-weight:700;color:var(--cyan);line-height:1;}
+.stat-label{font-size:11px;color:var(--dim);letter-spacing:2px;text-transform:uppercase;margin-top:5px;}
+
+/* TICKER */
+.ticker{position:absolute;bottom:0;left:0;right:0;background:var(--surface);border-top:1px solid var(--border);padding:12px 0;overflow:hidden;z-index:10;}
+.ticker-inner{display:flex;gap:80px;animation:ticker 35s linear infinite;white-space:nowrap;}
+.ticker-item{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px;}
+.ticker-item span{color:var(--cyan);}
+@keyframes ticker{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px);}to{opacity:1;transform:translateY(0);}}
+@keyframes fadeLeft{from{opacity:0;transform:translate(30px,-50%);}to{opacity:1;transform:translate(0,-50%);}}
+.glitch{position:relative;}
+.glitch::before,.glitch::after{content:attr(data-text);position:absolute;top:0;left:0;width:100%;color:inherit;-webkit-text-stroke:inherit;}
+.glitch::before{text-shadow:-2px 0 var(--red);clip-path:polygon(0 0,100% 0,100% 45%,0 45%);animation:g1 3s infinite 1s;}
+.glitch::after{text-shadow:2px 0 var(--cyan);clip-path:polygon(0 55%,100% 55%,100% 100%,0 100%);animation:g2 3s infinite 1s;}
+@keyframes g1{0%,94%,100%{transform:none;opacity:0;}95%{transform:translateX(-3px);opacity:0.8;}97%{transform:translateX(3px);opacity:0.8;}}
+@keyframes g2{0%,94%,100%{transform:none;opacity:0;}96%{transform:translateX(3px);opacity:0.8;}98%{transform:translateX(-3px);opacity:0.8;}}
+
+section{position:relative;z-index:2;}
+.section-inner{max-width:1200px;margin:0 auto;padding:100px 60px;}
+.section-label{font-family:'Space Mono',monospace;font-size:11px;letter-spacing:5px;color:var(--cyan);text-transform:uppercase;margin-bottom:16px;}
+.section-title{font-family:'Syne',sans-serif;font-weight:800;font-size:clamp(36px,5vw,64px);line-height:1;letter-spacing:-2px;margin-bottom:60px;color:#fff;}
+.section-title em{font-style:normal;color:transparent;-webkit-text-stroke:1px var(--cyan);}
+
+.terminal-box{background:var(--bg);border:1px solid var(--border);padding:30px;font-family:'Space Mono',monospace;font-size:13px;line-height:2;}
+.terminal-bar{display:flex;gap:8px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--border);}
+.dot{width:10px;height:10px;border-radius:50%;}
+.dot-r{background:#ff5f57;}.dot-y{background:#febc2e;}.dot-g{background:#28c840;}
+.t-line{color:var(--dim);}
+.t-line .cmd{color:var(--green);}.t-line .val{color:var(--cyan);}.t-line .ok{color:var(--green);}.t-line .warn{color:var(--orange);}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 0.7s,transform 0.7s;}
+.reveal.visible{opacity:1;transform:translateY(0);}
+
+/* ==================== QA SECTION ==================== */
+#qa{background:var(--surface);border-bottom:1px solid var(--border);}
+.qa-hero-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;margin-bottom:80px;}
+.qa-intro-text{font-size:15px;color:var(--dim);line-height:1.9;margin-bottom:14px;}
+.qa-intro-text strong{color:var(--text);}
+.skill-chips{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.chip{padding:6px 16px;border:1px solid var(--border);font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:1px;transition:all 0.3s;}
+.chip:hover{border-color:var(--cyan);color:var(--cyan);}
+.qa-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:2px;margin-bottom:70px;}
+.qa-metric{background:var(--bg);padding:30px;text-align:center;}
+.metric-val{font-family:'Space Mono',monospace;font-size:40px;font-weight:700;color:var(--cyan);line-height:1;}
+.metric-label{font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:2px;text-transform:uppercase;}
+.testing-types{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;margin-bottom:70px;}
+.test-type-card{background:var(--bg);padding:28px;border-top:2px solid transparent;transition:all 0.3s;}
+.test-type-card:hover{background:var(--surface2);border-top-color:var(--cyan);}
+.test-icon{font-size:26px;margin-bottom:14px;display:block;}
+.test-type-name{font-weight:700;font-size:15px;color:#fff;margin-bottom:8px;}
+.test-type-desc{font-size:12px;color:var(--dim);line-height:1.6;margin-bottom:14px;}
+.test-tags{display:flex;flex-wrap:wrap;gap:6px;}
+.test-tag{font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);border:1px solid rgba(0,255,245,0.2);padding:3px 8px;letter-spacing:1px;}
+.lifecycle-wrap{margin-bottom:70px;}
+.lifecycle-steps{display:flex;gap:0;overflow-x:auto;padding-bottom:4px;}
+.lifecycle-step{flex:1;min-width:130px;background:var(--bg);padding:22px 16px;position:relative;text-align:center;border-right:1px solid var(--border);}
+.lifecycle-step:last-child{border-right:none;}
+.lifecycle-step::after{content:'›';position:absolute;right:-10px;top:50%;transform:translateY(-50%);color:var(--cyan);font-size:18px;z-index:1;font-family:'Space Mono',monospace;}
+.lifecycle-step:last-child::after{display:none;}
+.step-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:2px;margin-bottom:10px;}
+.step-name{font-weight:700;font-size:12px;color:#fff;margin-bottom:7px;line-height:1.3;}
+.step-detail{font-size:11px;color:var(--dim);line-height:1.5;}
+.testcase-wrap{margin-bottom:70px;overflow-x:auto;}
+.tc-table{width:100%;border-collapse:collapse;font-family:'Space Mono',monospace;font-size:11px;}
+.tc-table th{background:var(--surface2);color:var(--cyan);padding:14px 16px;text-align:left;letter-spacing:2px;font-size:9px;text-transform:uppercase;border-bottom:1px solid var(--border);}
+.tc-table td{padding:13px 16px;border-bottom:1px solid rgba(0,255,245,0.05);color:var(--text);vertical-align:top;}
+.tc-table tr:hover td{background:var(--surface2);}
+.tc-status{display:inline-block;padding:3px 10px;font-size:9px;letter-spacing:2px;}
+.tc-pass{background:rgba(57,255,20,0.1);color:var(--green);border:1px solid rgba(57,255,20,0.3);}
+.tc-fail{background:rgba(255,45,85,0.1);color:var(--red);border:1px solid rgba(255,45,85,0.3);}
+.tc-skip{background:rgba(255,149,0,0.1);color:var(--orange);border:1px solid rgba(255,149,0,0.3);}
+.tc-id{color:var(--cyan);}
+.ph{color:var(--red);}.pm{color:var(--orange);}.pl{color:var(--green);}
+.agile-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px;margin-bottom:70px;}
+.agile-card{background:var(--bg);padding:28px;transition:background 0.3s;}
+.agile-card:hover{background:var(--surface2);}
+.agile-title{font-weight:700;font-size:15px;color:#fff;margin-bottom:10px;display:flex;align-items:center;gap:10px;}
+.agile-title span{font-size:20px;}
+.agile-desc{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:12px;}
+.agile-list{list-style:none;}
+.agile-list li{font-size:12px;color:var(--text);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
+.agile-list li::before{content:'›';color:var(--cyan);font-family:'Space Mono',monospace;}
+.skills-two-col{display:grid;grid-template-columns:1fr 1fr;gap:2px;}
+.qa-skill-row{background:var(--bg);padding:18px 24px;display:flex;align-items:center;justify-content:space-between;gap:20px;transition:background 0.3s;}
+.qa-skill-row:hover{background:var(--surface2);}
+.skill-left{display:flex;align-items:center;gap:12px;}
+.skill-dot{width:6px;height:6px;border-radius:50%;background:var(--cyan);flex-shrink:0;}
+.qa-skill-name{font-size:13px;color:var(--text);font-weight:600;}
+.qa-skill-bar{width:150px;height:3px;background:rgba(0,255,245,0.08);border-radius:2px;overflow:hidden;flex-shrink:0;}
+.qa-skill-fill{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green));border-radius:2px;width:0%;transition:width 1.2s ease;}
+
+/* ==================== ABOUT (RICH) ==================== */
+#about{background:var(--bg);border-bottom:1px solid var(--border);}
+.about-rich{display:grid;grid-template-columns:1.2fr 0.8fr;gap:70px;align-items:start;}
+.about-story{font-size:15px;line-height:1.9;color:var(--dim);margin-bottom:20px;}
+.about-story strong{color:var(--text);}
+.about-story em{color:var(--cyan);font-style:normal;}
+.about-highlight{background:var(--surface);border-left:2px solid var(--cyan);padding:18px 22px;margin:24px 0;font-family:'Space Mono',monospace;font-size:12px;color:var(--text);line-height:1.8;}
+.about-right{display:flex;flex-direction:column;gap:20px;}
+.about-chips-label{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:3px;color:var(--dim);text-transform:uppercase;margin-bottom:6px;}
+
+/* ==================== EXPERIENCE TIMELINE ==================== */
+#experience{background:var(--surface);border-bottom:1px solid var(--border);}
+.timeline{position:relative;padding-left:40px;}
+.timeline::before{content:'';position:absolute;left:0;top:0;bottom:0;width:1px;background:linear-gradient(180deg,var(--cyan),rgba(0,255,245,0.1));}
+.timeline-item{position:relative;margin-bottom:60px;}
+.timeline-item:last-child{margin-bottom:0;}
+.timeline-dot{position:absolute;left:-46px;top:4px;width:12px;height:12px;border:1px solid var(--cyan);background:var(--bg);border-radius:50%;}
+.timeline-dot.active{background:var(--cyan);box-shadow:0 0 12px rgba(0,255,245,0.5);}
+.timeline-period{font-family:'Space Mono',monospace;font-size:10px;color:var(--cyan);letter-spacing:3px;text-transform:uppercase;margin-bottom:10px;}
+.timeline-role{font-weight:800;font-size:22px;color:#fff;letter-spacing:-0.5px;margin-bottom:4px;}
+.timeline-company{font-family:'Space Mono',monospace;font-size:12px;color:var(--green);margin-bottom:16px;letter-spacing:1px;}
+.timeline-badge{display:inline-block;font-family:'Space Mono',monospace;font-size:9px;padding:3px 10px;border:1px solid rgba(57,255,20,0.3);color:var(--green);background:rgba(57,255,20,0.05);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px;}
+.timeline-badge.internship{border-color:rgba(255,149,0,0.3);color:var(--orange);background:rgba(255,149,0,0.05);}
+.timeline-desc{font-size:14px;color:var(--dim);line-height:1.8;margin-bottom:16px;}
+.timeline-points{list-style:none;}
+.timeline-points li{font-size:13px;color:var(--text);padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:flex-start;gap:10px;line-height:1.5;}
+.timeline-points li::before{content:'›';color:var(--cyan);font-family:'Space Mono',monospace;flex-shrink:0;margin-top:1px;}
+.timeline-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;}
+.tl-tag{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);border:1px solid var(--border);padding:4px 10px;letter-spacing:1px;}
+
+/* ==================== PROJECTS (with links) ==================== */
+#projects{background:var(--bg);border-bottom:1px solid var(--border);}
+.projects-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:2px;}
+.project-card{background:var(--surface);padding:30px 26px;border:1px solid transparent;transition:all 0.3s;position:relative;overflow:hidden;display:flex;flex-direction:column;}
+.project-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--cyan),var(--green));transform:scaleX(0);transform-origin:left;transition:transform 0.4s;}
+.project-card:hover::before{transform:scaleX(1);}
+.project-card:hover{background:var(--surface2);border-color:var(--border);transform:translateY(-4px);}
+.project-num{font-family:'Space Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:3px;margin-bottom:16px;}
+.project-icon{font-size:24px;margin-bottom:14px;display:block;}
+.project-name{font-weight:800;font-size:16px;margin-bottom:10px;color:#fff;line-height:1.2;}
+.project-desc{font-size:12px;color:var(--dim);line-height:1.7;flex:1;}
+.project-footer{margin-top:18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+.project-tag{font-family:'Space Mono',monospace;font-size:9px;color:var(--cyan);letter-spacing:2px;text-transform:uppercase;}
+.project-links{display:flex;gap:10px;}
+.project-link{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);text-decoration:none;letter-spacing:1px;padding:4px 10px;border:1px solid var(--border);transition:all 0.3s;display:flex;align-items:center;gap:4px;}
+.project-link:hover{color:var(--cyan);border-color:var(--cyan);}
+
+/* ==================== LIVE PROJECTS (full featured) ==================== */
+#live{background:var(--surface);border-bottom:1px solid var(--border);}
+.live-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+.live-card{background:var(--bg);padding:32px;transition:all 0.3s;position:relative;overflow:hidden;border:1px solid transparent;display:flex;flex-direction:column;}
+.live-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--cyan),var(--green));transform:scaleY(0);transform-origin:top;transition:transform 0.4s;}
+.live-card:hover::before{transform:scaleY(1);}
+.live-card:hover{background:var(--surface2);border-color:var(--border);}
+.live-badge{font-family:'Space Mono',monospace;font-size:9px;letter-spacing:3px;text-transform:uppercase;color:var(--green);margin-bottom:14px;display:flex;align-items:center;gap:6px;}
+.live-dot{width:5px;height:5px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+.live-title{font-weight:800;font-size:20px;color:#fff;margin-bottom:10px;letter-spacing:-0.5px;}
+.live-desc{font-size:13px;color:var(--dim);line-height:1.7;margin-bottom:16px;flex:1;}
+.live-features{list-style:none;margin-bottom:20px;}
+.live-features li{font-size:12px;color:var(--text);padding:5px 0;border-bottom:1px solid rgba(0,255,245,0.05);display:flex;align-items:center;gap:8px;}
+.live-features li::before{content:'›';color:var(--cyan);font-family:'Space Mono',monospace;}
+.live-footer{display:flex;gap:10px;flex-wrap:wrap;}
+.live-btn{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:10px 18px;border:1px solid var(--cyan);color:var(--cyan);transition:all 0.3s;position:relative;overflow:hidden;}
+.live-btn::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-101%);transition:transform 0.3s;}
+.live-btn:hover::before{transform:translateX(0);}
+.live-btn:hover{color:var(--bg);}
+.live-btn span{position:relative;}
+.live-btn-gh{border-color:var(--border);color:var(--dim);}
+.live-btn-gh::before{background:var(--surface2);}
+.live-btn-gh:hover{color:var(--text);}
+.live-stack{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:16px;}
+.live-st{font-family:'Space Mono',monospace;font-size:9px;color:var(--dim);border:1px solid var(--border);padding:3px 8px;letter-spacing:1px;}
+
+/* ==================== FEATURED ==================== */
+#featured{background:var(--bg);border-bottom:1px solid var(--border);}
+.featured-card{display:grid;grid-template-columns:1fr 1fr;gap:0;border:1px solid var(--border);margin-bottom:40px;overflow:hidden;}
+.featured-card:nth-child(even){direction:rtl;}
+.featured-card:nth-child(even) *{direction:ltr;}
+.featured-visual{background:var(--surface);display:flex;align-items:center;justify-content:center;padding:50px;position:relative;overflow:hidden;min-height:280px;}
+.featured-visual::before{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 50%,rgba(0,255,245,0.06) 0%,transparent 60%);}
+.code-anim{font-family:'Space Mono',monospace;font-size:12px;line-height:2.1;color:var(--dim);position:relative;z-index:1;}
+.code-anim .hl{color:var(--cyan);}.code-anim .hl2{color:var(--green);}.code-anim .hl3{color:rgba(0,255,245,0.4);}.code-anim .ok{color:var(--green);}
+.featured-content{padding:46px;display:flex;flex-direction:column;justify-content:center;}
+.featured-badge{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--cyan);margin-bottom:14px;}
+.featured-title{font-weight:800;font-size:clamp(20px,2.5vw,32px);color:#fff;line-height:1.1;margin-bottom:12px;letter-spacing:-1px;}
+.featured-desc{font-size:13px;color:var(--dim);line-height:1.8;margin-bottom:18px;}
+.feature-list{list-style:none;margin-bottom:18px;}
+.feature-list li{font-size:12px;color:var(--text);padding:6px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.feature-list li::before{content:'›';color:var(--cyan);font-family:'Space Mono',monospace;font-weight:700;}
+.feat-links{display:flex;gap:10px;flex-wrap:wrap;}
+.feat-link{font-family:'Space Mono',monospace;font-size:10px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;padding:9px 16px;border:1px solid var(--cyan);color:var(--cyan);transition:all 0.3s;position:relative;overflow:hidden;}
+.feat-link::before{content:'';position:absolute;inset:0;background:var(--cyan);transform:translateX(-101%);transition:transform 0.3s;}
+.feat-link:hover::before{transform:translateX(0);}
+.feat-link:hover{color:var(--bg);}
+.feat-link span{position:relative;}
+.feat-link-gh{border-color:var(--border);color:var(--dim);}
+.feat-link-gh::before{background:var(--surface2);}
+.feat-link-gh:hover{color:var(--text);}
+
+/* ==================== FRAUD ==================== */
+#fraud{background:var(--surface);border-bottom:1px solid var(--border);}
+.fraud-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px;}
+.fraud-item{background:var(--bg);padding:28px;display:grid;grid-template-columns:auto 1fr;gap:20px;align-items:start;transition:background 0.3s;}
+.fraud-item:hover{background:var(--surface2);}
+.fraud-idx{font-family:'Space Mono',monospace;font-size:30px;font-weight:700;color:transparent;-webkit-text-stroke:1px rgba(0,255,245,0.2);line-height:1;}
+.fraud-name{font-weight:700;font-size:14px;color:#fff;margin-bottom:7px;}
+.fraud-desc{font-size:12px;color:var(--dim);line-height:1.6;}
+
+/* ==================== STACK ==================== */
+#stack{background:var(--bg);border-bottom:1px solid var(--border);}
+.stack-row{display:flex;gap:2px;margin-bottom:2px;}
+.stack-item{flex:1;background:var(--surface);padding:24px 20px;border-bottom:2px solid transparent;transition:all 0.3s;text-align:center;}
+.stack-item:hover{background:var(--surface2);border-bottom-color:var(--cyan);}
+.stack-icon{font-size:28px;display:block;margin-bottom:10px;}
+.stack-name{font-family:'Space Mono',monospace;font-size:10px;color:var(--text);letter-spacing:1px;}
+
+/* ==================== CONTACT ==================== */
+#contact{background:var(--surface);border-bottom:1px solid var(--border);}
+.contact-wrap{max-width:800px;}
+.contact-tagline{font-size:clamp(18px,2.5vw,32px);font-weight:800;color:#fff;line-height:1.2;margin-bottom:16px;}
+.contact-sub{font-size:15px;color:var(--dim);margin-bottom:40px;line-height:1.7;}
+.contact-links{display:flex;gap:14px;flex-wrap:wrap;}
+.contact-link{display:flex;align-items:center;gap:12px;padding:18px 26px;background:var(--bg);border:1px solid var(--border);text-decoration:none;color:var(--text);transition:all 0.3s;font-family:'Space Mono',monospace;font-size:12px;}
+.contact-link:hover{border-color:var(--cyan);color:var(--cyan);}
+.contact-link .link-icon{font-size:18px;}
+.contact-link.resume-dl{border-color:var(--green);color:var(--green);}
+.contact-link.resume-dl:hover{background:rgba(57,255,20,0.08);}
+
+footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;}
+.footer-text{font-family:'Space Mono',monospace;font-size:11px;color:var(--dim);letter-spacing:2px;}
+.footer-text span{color:var(--cyan);}
+
+/* RESPONSIVE */
+@media(max-width:1000px){
+  nav{padding:16px 24px;}.nav-links{display:none;}.hero-stats{display:none;}
+  #hero{padding:120px 24px 80px;}.section-inner{padding:70px 24px;}
+  .about-rich,.featured-card,.fraud-grid,.projects-grid,.live-grid,.qa-hero-grid,.testing-types,.agile-grid,.skills-two-col,.timeline-item{grid-template-columns:1fr;}
+  .qa-metrics{grid-template-columns:repeat(2,1fr);}
+  .featured-card:nth-child(even){direction:ltr;}
+  footer{padding:20px 24px;flex-direction:column;gap:12px;}
+  .lifecycle-steps{flex-wrap:wrap;}.lifecycle-step{min-width:45%;}
+}
+</style>
+</head>
+<body>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">AK.SYS_v2.0</div>
+  <ul class="nav-links">
+    <li><a href="#qa">QA Profile</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#live">Live Projects</a></li>
+    <li><a href="#fraud">Fraud Lab</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div class="nav-right">
+    <div class="nav-status"><div class="status-dot"></div>available for work</div>
+    <a href="#contact" class="nav-resume"><span>⬇ Resume</span></a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-eyebrow">// QA Automation Tester · Systems Developer · Intelligence Builder</div>
+  <h1 class="hero-name">
+    <span class="glitch" data-text="ABHISHANT">ABHISHANT</span>
+    <span class="glitch" data-text="KUMAR">KUMAR</span>
+  </h1>
+  <p class="hero-title">
+    <strong>QA Automation Engineer</strong> with 2+ years building test systems, fraud detection tools, and full-stack applications — shipped to production, live on the web.
+  </p>
+  <div class="hero-cta">
+    <a href="#qa" class="btn"><span>› QA Profile</span></a>
+    <a href="#live" class="btn btn-ghost"><span>→ Live Projects</span></a>
+    <a href="#contact" class="btn btn-green"><span>⬇ Resume</span></a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">2+</div><div class="stat-label">Years QA Exp</div></div>
+    <div class="stat"><div class="stat-num">17+</div><div class="stat-label">Tools Built</div></div>
+    <div class="stat"><div class="stat-num">10+</div><div class="stat-label">Live Projects</div></div>
+  </div>
+  <div class="ticker">
+    <div class="ticker-inner">
+      <span class="ticker-item">SELENIUM AUTOMATION <span>●</span></span>
+      <span class="ticker-item">API TESTING <span>●</span></span>
+      <span class="ticker-item">TEST CASE DESIGN <span>●</span></span>
+      <span class="ticker-item">AGILE · JIRA <span>●</span></span>
+      <span class="ticker-item">SQL VALIDATION <span>●</span></span>
+      <span class="ticker-item">REGRESSION TESTING <span>●</span></span>
+      <span class="ticker-item">CI/CD PIPELINES <span>●</span></span>
+      <span class="ticker-item">BUG LIFECYCLE <span>●</span></span>
+      <span class="ticker-item">FRAUD DETECTION <span>●</span></span>
+      <span class="ticker-item">NODE.JS · PYTHON <span>●</span></span>
+      <span class="ticker-item">SELENIUM AUTOMATION <span>●</span></span>
+      <span class="ticker-item">API TESTING <span>●</span></span>
+      <span class="ticker-item">TEST CASE DESIGN <span>●</span></span>
+      <span class="ticker-item">AGILE · JIRA <span>●</span></span>
+      <span class="ticker-item">SQL VALIDATION <span>●</span></span>
+      <span class="ticker-item">REGRESSION TESTING <span>●</span></span>
+      <span class="ticker-item">CI/CD PIPELINES <span>●</span></span>
+      <span class="ticker-item">BUG LIFECYCLE <span>●</span></span>
+      <span class="ticker-item">FRAUD DETECTION <span>●</span></span>
+      <span class="ticker-item">NODE.JS · PYTHON <span>●</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- QA SECTION -->
+<section id="qa">
+  <div class="section-inner">
+    <div class="section-label reveal">// 001 — QA Engineering Profile</div>
+    <h2 class="section-title reveal">Quality is a <em>System</em>,<br>Not a Step</h2>
+    <div class="qa-hero-grid">
+      <div class="reveal">
+        <p class="qa-intro-text">As a <strong>QA Automation Tester</strong> with 2+ years at <strong>Virus Positive Technologies</strong>, I design test infrastructures that validate functionality, detect behavioral anomalies, verify data integrity, and expose security vulnerabilities — all automatically.</p>
+        <p class="qa-intro-text">I work across the full <strong>STLC</strong> — from requirement analysis and test case design to execution, defect tracking in <strong>Jira</strong>, and CI/CD-integrated regression suites. Every test is reproducible, evidence-backed, and automated.</p>
+        <div class="skill-chips">
+          <div class="chip">Selenium WebDriver</div><div class="chip">Python</div>
+          <div class="chip">TestNG</div><div class="chip">Jira</div>
+          <div class="chip">Agile / Scrum</div><div class="chip">REST API Testing</div>
+          <div class="chip">SQL</div><div class="chip">GitHub Actions</div>
+          <div class="chip">Postman</div><div class="chip">Bug Lifecycle</div>
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="terminal-box">
+          <div class="terminal-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="t-line">$ <span class="cmd">pytest test_suite/ -v --tb=short</span></div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_login_flow.py</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_dashboard_api.py</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_data_validation.py</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_redirect_chain.py</div>
+          <div class="t-line"><span class="warn">SKIP &nbsp;</span> &nbsp;test_payment.py [not_configured]</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_extension_inject.py</div>
+          <div class="t-line"><span class="ok">PASSED</span> &nbsp;test_sql_integrity.py</div>
+          <div class="t-line">&nbsp;</div>
+          <div class="t-line"><span class="ok">✓ 6 passed</span>, <span class="warn">1 skipped</span> &nbsp;in 5.3s</div>
+          <div class="t-line"><span class="ok">Coverage: 94% | 0 Critical Failures</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="qa-metrics reveal">
+      <div class="qa-metric"><div class="metric-val">2+</div><div class="metric-label">Years QA Exp</div></div>
+      <div class="qa-metric"><div class="metric-val">17+</div><div class="metric-label">Automation Scripts</div></div>
+      <div class="qa-metric"><div class="metric-val">94%</div><div class="metric-label">Test Coverage</div></div>
+      <div class="qa-metric"><div class="metric-val">0</div><div class="metric-label">Manual Clicks Needed</div></div>
+    </div>
+
+    <div class="section-label reveal" style="margin-bottom:20px;">// Types of Testing I Do</div>
+    <div class="testing-types reveal">
+      <div class="test-type-card"><span class="test-icon">🧪</span><div class="test-type-name">Functional Testing</div><div class="test-type-desc">Validates every feature against business requirements. Login flows, form submissions, dashboard data, user journeys — tested end-to-end via Selenium.</div><div class="test-tags"><span class="test-tag">E2E</span><span class="test-tag">UI Testing</span><span class="test-tag">Selenium</span><span class="test-tag">Happy Path</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🔗</span><div class="test-type-name">API Testing</div><div class="test-type-desc">Validates REST endpoints for correct status codes, response structure, data contracts, filters, and edge cases. Automated regression on every API change.</div><div class="test-tags"><span class="test-tag">REST API</span><span class="test-tag">Postman</span><span class="test-tag">Status Codes</span><span class="test-tag">JSON Schema</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🔁</span><div class="test-type-name">Regression Testing</div><div class="test-type-desc">Full regression suite triggered automatically on every code push via GitHub Actions. Ensures new code never breaks existing functionality.</div><div class="test-tags"><span class="test-tag">GitHub Actions</span><span class="test-tag">CI/CD</span><span class="test-tag">Batch Runner</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🗄️</span><div class="test-type-name">Database / SQL Testing</div><div class="test-type-desc">Validates data integrity at database level — comparing expected vs actual records, checking for missing data, duplicates, and cross-source consistency.</div><div class="test-tags"><span class="test-tag">SQL</span><span class="test-tag">Data Integrity</span><span class="test-tag">Excel Diff</span><span class="test-tag">Pandas</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🛡️</span><div class="test-type-name">Security / Behavioral Testing</div><div class="test-type-desc">Detects clickjacking, hidden redirects, cookie hijacking, inline adware injection, and extension-based fraud. Behavioral security validation beyond standard QA.</div><div class="test-tags"><span class="test-tag">Clickjacking</span><span class="test-tag">Redirect Testing</span><span class="test-tag">Adware Hunt</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🖥️</span><div class="test-type-name">Cross-Browser Testing</div><div class="test-type-desc">Runs automated test suites across Chrome, Firefox, and Edge using different Selenium WebDriver configs to ensure consistent behavior everywhere.</div><div class="test-tags"><span class="test-tag">Chrome</span><span class="test-tag">Firefox</span><span class="test-tag">Edge</span><span class="test-tag">WebDriver</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🔍</span><div class="test-type-name">Smoke Testing</div><div class="test-type-desc">Quick sanity checks on critical paths after every build — login, core nav, primary APIs — to verify the build is stable before running the full suite.</div><div class="test-tags"><span class="test-tag">Sanity Check</span><span class="test-tag">Build Verify</span><span class="test-tag">Critical Path</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🔬</span><div class="test-type-name">Negative / Edge Case Testing</div><div class="test-type-desc">Tests invalid inputs, empty fields, boundary values, wrong data types, unauthorized access attempts — ensuring the system fails gracefully and securely.</div><div class="test-tags"><span class="test-tag">Boundary Values</span><span class="test-tag">Invalid Input</span><span class="test-tag">Edge Cases</span></div></div>
+      <div class="test-type-card"><span class="test-icon">🧩</span><div class="test-type-name">Integration Testing</div><div class="test-type-desc">Validates how modules work together — upload pipelines into S3, API data into dashboards, email triggers from forms, socket events across clients.</div><div class="test-tags"><span class="test-tag">AWS S3</span><span class="test-tag">Socket.IO</span><span class="test-tag">API + UI</span></div></div>
+    </div>
+
+    <div class="section-label reveal" style="margin-bottom:20px;">// Software Test Life Cycle (STLC)</div>
+    <div class="lifecycle-wrap reveal">
+      <div class="lifecycle-steps">
+        <div class="lifecycle-step"><div class="step-num">01</div><div class="step-name">Requirement Analysis</div><div class="step-detail">Review specs, identify testable scenarios, flag ambiguities</div></div>
+        <div class="lifecycle-step"><div class="step-num">02</div><div class="step-name">Test Planning</div><div class="step-detail">Scope, strategy, tools, timeline and risk identification</div></div>
+        <div class="lifecycle-step"><div class="step-num">03</div><div class="step-name">Test Case Design</div><div class="step-detail">Write detailed cases: steps, expected results, priority, type</div></div>
+        <div class="lifecycle-step"><div class="step-num">04</div><div class="step-name">Environment Setup</div><div class="step-detail">Configure test env, drivers, test data and CI pipeline</div></div>
+        <div class="lifecycle-step"><div class="step-num">05</div><div class="step-name">Test Execution</div><div class="step-detail">Run automated suites, log results, capture evidence on failures</div></div>
+        <div class="lifecycle-step"><div class="step-num">06</div><div class="step-name">Defect Reporting</div><div class="step-detail">Log bugs in Jira with severity, steps, screenshots, priority</div></div>
+        <div class="lifecycle-step"><div class="step-num">07</div><div class="step-name">Re-test & Closure</div><div class="step-detail">Verify fixes, run regression, sign off and generate report</div></div>
+      </div>
+    </div>
+
+    <div class="section-label reveal" style="margin-bottom:20px;">// Sample Test Cases</div>
+    <div class="testcase-wrap reveal">
+      <table class="tc-table">
+        <thead><tr><th>TC ID</th><th>Test Case</th><th>Type</th><th>Priority</th><th>Expected Result</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td class="tc-id">TC-001</td><td>Valid login with correct credentials</td><td>Functional</td><td class="ph">High</td><td>Dashboard loads, session token returned</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-002</td><td>Login with invalid password</td><td>Negative</td><td class="ph">High</td><td>Error message shown, no session created</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-003</td><td>API GET /dashboard returns filtered data</td><td>API</td><td class="ph">High</td><td>200 OK, correct JSON schema, filters applied</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-004</td><td>SQL: DB record count matches API response</td><td>Database</td><td class="pm">Medium</td><td>DB count == API total field</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-005</td><td>File upload to S3 returns correct URL</td><td>Integration</td><td class="pm">Medium</td><td>S3 URL generated, file accessible</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-006</td><td>Extension injects cashback popup on brand site</td><td>Security</td><td class="ph">High</td><td>Popup detected, DOM injection flagged</td><td><span class="tc-status tc-fail">FAIL</span></td></tr>
+          <tr><td class="tc-id">TC-007</td><td>Coupon redirect leads to correct affiliate</td><td>Behavioral</td><td class="ph">High</td><td>Network header matches expected affiliate ID</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+          <tr><td class="tc-id">TC-008</td><td>Empty search field shows validation message</td><td>Negative</td><td class="pl">Low</td><td>Inline error shown, no API call made</td><td><span class="tc-status tc-pass">PASS</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-label reveal" style="margin-bottom:20px;">// Agile · Jira · SQL · TestNG</div>
+    <div class="agile-grid reveal">
+      <div class="agile-card"><div class="agile-title"><span>🔄</span>Agile / Scrum</div><div class="agile-desc">Sprint-based cycles with QA integrated from day one — backlog grooming to sprint review, not bolted on at the end.</div><ul class="agile-list"><li>Sprint planning and story point estimation</li><li>Daily standups with dev and QA sync</li><li>Acceptance criteria validation per story</li><li>Retrospectives and process improvement</li></ul></div>
+      <div class="agile-card"><div class="agile-title"><span>📋</span>Jira — Bug Lifecycle</div><div class="agile-desc">Full defect management in Jira. Every bug logged with severity, reproduction steps, screenshots, and environment details.</div><ul class="agile-list"><li>New → Open → In Progress → Fixed → Retest → Closed</li><li>Severity: Critical / Major / Minor / Trivial</li><li>Linked to sprint stories and test cases</li><li>Closed only after verified fix + regression pass</li></ul></div>
+      <div class="agile-card"><div class="agile-title"><span>🗄️</span>SQL in QA</div><div class="agile-desc">Validate backend data independently — catching data pipeline bugs invisible to UI-only tests.</div><ul class="agile-list"><li>SELECT queries to verify record counts</li><li>JOIN validation for relational integrity</li><li>NULL / duplicate / constraint checks</li><li>Pre/post test data setup and teardown</li></ul></div>
+      <div class="agile-card"><div class="agile-title"><span>⚡</span>TestNG Framework</div><div class="agile-desc">Structured test organization with annotations, grouping, parallel execution, and HTML report generation.</div><ul class="agile-list"><li>@Test, @BeforeMethod, @AfterMethod hooks</li><li>Test grouping: smoke, regression, sanity</li><li>Parallel execution across browsers</li><li>HTML reports with full pass/fail summary</li></ul></div>
+    </div>
+
+    <div class="section-label reveal" style="margin-bottom:20px;">// QA Skill Proficiency</div>
+    <div class="skills-two-col">
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">Selenium WebDriver (Python)</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="95"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">REST API Testing</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="90"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">Test Case Design & STLC</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="92"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">SQL / Database Validation</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="80"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">Jira · Bug Lifecycle</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="88"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">Agile / Scrum</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="85"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">Security & Behavioral Testing</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="87"></div></div></div>
+      <div class="qa-skill-row reveal"><div class="skill-left"><div class="skill-dot"></div><div class="qa-skill-name">CI/CD · GitHub Actions</div></div><div class="qa-skill-bar"><div class="qa-skill-fill" data-width="82"></div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT — RICH -->
+<section id="about">
+  <div class="section-inner">
+    <div class="section-label reveal">// 002 — About Me</div>
+    <h2 class="section-title reveal">The Person<br>Behind the <em>Code</em></h2>
+    <div class="about-rich">
+      <div class="reveal">
+        <p class="about-story">I'm <strong>Abhishant Kumar</strong>, a QA Automation Tester from Rajasthan, India. Currently in <strong>Gurugaman</strong>, India. I'm on my way to becoming a <em>full-stack developer</em> — the kind of engineer who can't leave a repetitive task alone without automating it. If a process takes a human more than once, I'll build a system to do it forever.</p>
+        <p class="about-story" style="margin-top:16px;">My journey started with backend development training program — Python, PHP, Laravel, MySQL, HTML, CSS, and JavaScript — building CRUD systems and web workflows during an internship at <em>Smart Programming And Development</em>. That foundation gave me something most QA engineers don't have: I understand the backend deeply enough to know exactly where bugs hide before the code even ships.</p>
+        <div class="about-highlight">
+          "I don't just write test cases. I build the infrastructure that makes software trustworthy — automated, evidence-backed, and always running."
+        </div>
+        <p class="about-story">At <em>Virus Positive Technologies</em>, I work on one of the most unique testing challenges in the industry: detecting affiliate fraud, coupon manipulation, and behavioral anomalies across the web. This pushed me to engineer tools that go far beyond standard QA — Selenium-driven fraud detectors, adware hunters, clickjacking frameworks, and redirect chain trackers.</p>
+        <p class="about-story" style="margin-top:14px;">Outside work, I build full-stack applications — a <em>music streaming platform</em>, a <em>real-time chat app</em>, an <em>e-commerce site from SRS to deployment</em>, a <em>URL shortener with analytics</em>, and more. Everything is live, everything is linked.</p>
+        <div class="about-highlight" style="margin-top:24px;border-color:var(--green);color:var(--dim);">
+          📍 Gurugram, India &nbsp;·&nbsp; 🕐 Dec 2023 – Present (Current Role) &nbsp;·&nbsp; 💼 Open to QA / Automation roles
+        </div>
+      </div>
+      <div class="reveal">
+        <div class="about-chips-label">Core QA Skills</div>
+        <div class="skill-chips" style="margin-bottom:24px;">
+          <div class="chip">Selenium</div><div class="chip">Python</div><div class="chip">TestNG</div>
+          <div class="chip">Jira</div><div class="chip">SQL</div><div class="chip">Postman</div>
+          <div class="chip">Agile</div><div class="chip">GitHub Actions</div>
+        </div>
+        <div class="about-chips-label" style="margin-top:16px;">Backend & Full-Stack</div>
+        <div class="skill-chips" style="margin-bottom:24px;">
+          <div class="chip">Node.js</div><div class="chip">Express</div><div class="chip">Socket.IO</div>
+          <div class="chip">MongoDB</div><div class="chip">AWS S3</div><div class="chip">REST APIs</div>
+          <div class="chip">JavaScript</div><div class="chip">HTML/CSS</div>
+        </div>
+        <div class="about-chips-label" style="margin-top:16px;">Automation & Tooling</div>
+        <div class="skill-chips">
+          <div class="chip">Web Scraping</div><div class="chip">Excel Automation</div>
+          <div class="chip">PowerShell</div><div class="chip">Pandas</div>
+          <div class="chip">GitHub Actions</div>
+        </div>
+        <div class="terminal-box" style="margin-top:28px;">
+          <div class="terminal-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div></div>
+          <div class="t-line">$ <span class="cmd">cat ./about.json</span></div>
+          <div class="t-line"><span class="val">location:</span> Gurugram, India</div>
+          <div class="t-line"><span class="val">role: &nbsp;&nbsp;&nbsp;</span> QA Automation Tester</div>
+          <div class="t-line"><span class="val">exp: &nbsp;&nbsp;&nbsp;&nbsp;</span> 2+ years</div>
+          <div class="t-line"><span class="val">shipped: </span> 10+ live projects</div>
+          <div class="t-line"><span class="val">status: &nbsp;</span> <span class="ok">open to opportunities</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- EXPERIENCE TIMELINE -->
+<section id="experience">
+  <div class="section-inner">
+    <div class="section-label reveal">// 003 — Work Experience</div>
+    <h2 class="section-title reveal">Where I've <em>Worked</em></h2>
+    <div class="timeline">
+
+      <!-- Current Role -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot active"></div>
+        <div class="timeline-period">Dec 2023 — Present · 2+ Years</div>
+        <div class="timeline-role">QA Automation Tester</div>
+        <div class="timeline-company">Virus Positive Technologies · Full-Time</div>
+        <div class="timeline-badge">● Current Role</div>
+        <div class="timeline-desc">Engineering automation ecosystems for fraud detection, affiliate intelligence, and quality assurance at one of India's leading digital security companies. Work spans Python automation, Selenium-based testing, web scraping, API testing, and behavioral analysis systems.</div>
+        <ul class="timeline-points">
+          <li>Designed and built 17+ automation scripts eliminating 100% of manual repetitive workflows</li>
+          <li>Built end-to-end QA automation suites covering functional, API, regression, security, and database testing</li>
+          <li>Engineered a Fraud & Behavioral Intelligence Lab — clickjacking detection, adware hunting, extension behavior monitoring, and affiliate redirect mapping</li>
+          <li>Developed a Dashboard Reconstruction Engine intercepting API calls and exporting validated Excel reports</li>
+          <li>Created cloud upload automation integrated with AWS S3 for high-speed, pipeline-ready file operations</li>
+          <li>Worked in Agile/Scrum sprints with daily standups, Jira bug tracking, and sprint-based test planning</li>
+          <li>Wrote and maintained test case suites covering 94%+ test coverage across core product flows</li>
+          <li>Conducted SQL-based database validation to independently verify backend data integrity</li>
+        </ul>
+        <div class="timeline-tags">
+          <span class="tl-tag">Python</span><span class="tl-tag">Selenium</span><span class="tl-tag">Jira</span>
+          <span class="tl-tag">SQL</span><span class="tl-tag">TestNG</span><span class="tl-tag">Agile</span>
+          <span class="tl-tag">AWS S3</span><span class="tl-tag">REST API</span><span class="tl-tag">GitHub Actions</span>
+        </div>
+      </div>
+
+      <!-- Internship -->
+      <div class="timeline-item reveal">
+        <div class="timeline-dot"></div>
+        <div class="timeline-period">Mar 2023 — Sep 2023 · 7 Months</div>
+        <div class="timeline-role">Back End Developement Training</div>
+        <div class="timeline-company">Smart Programming And Development · Internship · Chandigarh, India</div>
+        <div class="timeline-badge internship">Internship</div>
+        <div class="timeline-desc">Professional training as a Backend Developer — built and maintained server-side systems, automated workflows, and delivered full-stack web applications using Python, PHP, and the Laravel framework.</div>
+        <ul class="timeline-points">
+          <li>Developed and maintained backend systems using Python and PHP</li>
+          <li>Automated web processes and testing workflows using Selenium — laying the foundation for future QA work</li>
+          <li>Designed and implemented CRUD operations for managing application data</li>
+          <li>Built web applications using the Laravel framework for scalable, production-ready solutions</li>
+          <li>Managed and optimized MySQL databases for high performance and data reliability</li>
+          <li>Followed best practices in coding, documentation, and version control using Git</li>
+          <li>Collaborated with cross-functional teams on backend-frontend integration</li>
+        </ul>
+        <div class="timeline-tags">
+          <span class="tl-tag">Python</span><span class="tl-tag">PHP</span><span class="tl-tag">Laravel</span>
+          <span class="tl-tag">MySQL</span><span class="tl-tag">Selenium</span><span class="tl-tag">Git</span><span class="tl-tag">CRUD</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- LIVE PROJECTS -->
+<section id="live">
+  <div class="section-inner">
+    <div class="section-label reveal">// 004 — Live Projects</div>
+    <h2 class="section-title reveal">Shipped &amp; <em>Live</em></h2>
+    <div class="live-grid">
+
+      <!-- ShopX -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Netlify</div>
+        <div class="live-title">ShopX — E-Commerce Platform</div>
+        <div class="live-stack"><span class="live-st">JavaScript</span><span class="live-st">DummyJSON API</span><span class="live-st">SheetDB API</span><span class="live-st">HTML/CSS</span></div>
+        <div class="live-desc">Full end-to-end e-commerce SPA built from a complete SRS document. Covers auth, product catalog, cart management, checkout, payment simulation, and order history — all wired to live APIs.</div>
+        <ul class="live-features">
+          <li>User registration, login, forgot password, session management</li>
+          <li>Product listing, search (debounced), category filtering, sorting</li>
+          <li>Cart with quantity management, tax calculation, grand total</li>
+          <li>Checkout flow + payment simulation (UPI / Wallet)</li>
+          <li>Order history with status filtering and order cancellation</li>
+          <li>Responsive across Desktop, Tablet, and Mobile</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://shopxecom.netlify.app/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/SCDVP-Ecommerce" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- AK Tunes -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Netlify</div>
+        <div class="live-title">AK Tunes — Music Streaming</div>
+        <div class="live-stack"><span class="live-st">JavaScript</span><span class="live-st">Music API</span><span class="live-st">CSS</span></div>
+        <div class="live-desc">Dynamic music streaming platform with API-based content loading, live album artwork, real-time search, and a fallback architecture ensuring zero downtime even when the primary source fails.</div>
+        <ul class="live-features">
+          <li>API-driven music loading and metadata display</li>
+          <li>Real-time search with instant results</li>
+          <li>Dynamic album artwork rendering per track</li>
+          <li>Custom audio player with full playback controls</li>
+          <li>Fallback architecture for resilient streaming</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://aktunes.netlify.app/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/Ak-Music-App" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- Chat App -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Render</div>
+        <div class="live-title">AK Chat App — Real-Time</div>
+        <div class="live-stack"><span class="live-st">Node.js</span><span class="live-st">Socket.IO</span><span class="live-st">Express</span></div>
+        <div class="live-desc">Full real-time chat application built with Socket.IO and Node.js. Bidirectional event-driven communication with room support and live user presence tracking.</div>
+        <ul class="live-features">
+          <li>WebSocket-based real-time messaging</li>
+          <li>Room-based chat architecture</li>
+          <li>Live user presence indicators</li>
+          <li>Event-driven Node.js server</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://ak-chatting.onrender.com/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/Ak-ChatApp" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- URL Shortener -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Render</div>
+        <div class="live-title">URL Intelligence Shortener</div>
+        <div class="live-stack"><span class="live-st">Node.js</span><span class="live-st">MongoDB</span><span class="live-st">Express</span></div>
+        <div class="live-desc">Not just a shortener — a tracking intelligence system. Every short URL logs hit counts, landing page destinations, and access timestamps. Full analytics dashboard included.</div>
+        <ul class="live-features">
+          <li>Short URL generation with hash logic</li>
+          <li>Per-URL hit tracking and analytics</li>
+          <li>Landing destination logging</li>
+          <li>Analytics dashboard for all links</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://url-shortener-skal.onrender.com/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/URL_Shortener-Node.Js" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- Airbnb -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Render</div>
+        <div class="live-title">AK AirBnb Homes</div>
+        <div class="live-stack"><span class="live-st">Node.js</span><span class="live-st">Express</span><span class="live-st">MongoDB</span><span class="live-st">EJS</span></div>
+        <div class="live-desc">An Airbnb-inspired property listing platform with full backend. Users can browse listings, view property details, and manage accommodation data through a clean server-rendered interface.</div>
+        <ul class="live-features">
+          <li>Full CRUD for property listings</li>
+          <li>Server-rendered views with EJS templates</li>
+          <li>MongoDB persistence for listings</li>
+          <li>RESTful backend architecture</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://ak-airbnbhomes.onrender.com/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/Ak-airBnbHomes" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- Blogify -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Render</div>
+        <div class="live-title">AK Blogify — Blogging Platform</div>
+        <div class="live-stack"><span class="live-st">Node.js</span><span class="live-st">Express</span><span class="live-st">MongoDB</span></div>
+        <div class="live-desc">A full-featured blogging platform with post creation, editing, and management. Clean server-rendered architecture with persistent MongoDB storage and a smooth reading experience.</div>
+        <ul class="live-features">
+          <li>Full blog post CRUD operations</li>
+          <li>Post listing and detail pages</li>
+          <li>MongoDB-backed persistent storage</li>
+          <li>Clean, readable typography layout</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://ak-blogify.onrender.com/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/Ak-Blogify" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- Server Monitor -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Render</div>
+        <div class="live-title">VPT Server Monitor Tool</div>
+        <div class="live-stack"><span class="live-st">Node.js</span><span class="live-st">Express</span><span class="live-st">Admin Auth</span></div>
+        <div class="live-desc">An internal-grade server monitoring and listing tool. Admin-protected interface for adding, viewing, and managing server entries. Built for professional operational use at VPT.</div>
+        <ul class="live-features">
+          <li>Admin-only access control</li>
+          <li>Server listing and entry management</li>
+          <li>Add / view / manage server records</li>
+          <li>Clean operational dashboard UI</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://vptservermonitortool.onrender.com/" class="live-btn" target="_blank"><span>↗ View Live</span></a>
+          <a href="https://github.com/AbhishantKumar1602/VptServerMonitorTool" class="live-btn live-btn-gh" target="_blank"><span>⌨ GitHub</span></a>
+        </div>
+      </div>
+
+      <!-- Mini Projects -->
+      <div class="live-card reveal">
+        <div class="live-badge"><div class="live-dot"></div>Live on Netlify</div>
+        <div class="live-title">Frontend Mini Projects</div>
+        <div class="live-stack"><span class="live-st">HTML</span><span class="live-st">CSS</span><span class="live-st">JavaScript</span><span class="live-st">LocalStorage</span></div>
+        <div class="live-desc">A collection of polished frontend projects built while mastering HTML, CSS, and JavaScript — each with real interactivity and persistence.</div>
+        <ul class="live-features">
+          <li>To-Do App — task management with localStorage persistence</li>
+          <li>Bat Ball Stump Game — interactive game with score tracking</li>
+          <li>Student Feedback Survey — form with validation and submission</li>
+          <li>Myntra Checkout — product listing + checkout UI clone</li>
+        </ul>
+        <div class="live-footer">
+          <a href="https://aktodonoteapp.netlify.app/" class="live-btn" target="_blank"><span>↗ To-Do App</span></a>
+          <a href="https://akbatballstumpgame.netlify.app/" class="live-btn live-btn-gh" target="_blank"><span>↗ Game</span></a>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- AUTOMATION PROJECTS -->
+<section id="projects">
+  <div class="section-inner">
+    <div class="section-label reveal">// 005 — Automation Scripts</div>
+    <h2 class="section-title reveal">Systems I've <em>Built</em></h2>
+    <div class="projects-grid">
+      <div class="project-card reveal"><div class="project-num">01 · AUTOMATION</div><div class="project-icon">⚡</div><div class="project-name">Punch-In / Punch-Out Engine</div><div class="project-desc">Full login + dashboard attendance flow automated via batch file or GitHub Actions. Zero manual clicks, runs on schedule or on-demand.</div><div class="project-footer"><div class="project-tag">Python · Selenium · GitHub CI</div><div class="project-links"><a href="https://github.com/AbhishantAK/vpt-auto-punchout" class="project-link" target="_blank">⌨ GitHub</a></div></div></div>
+      <div class="project-card reveal"><div class="project-num">02 · DATA</div><div class="project-icon">📊</div><div class="project-name">Dashboard Reconstruction Engine</div><div class="project-desc">Intercepts API calls, rebuilds dashboard data with custom filters, validations, and exports directly to formatted Excel.</div><div class="project-footer"><div class="project-tag">Python · REST API · Excel</div></div></div>
+      <div class="project-card reveal"><div class="project-num">03 · CLOUD</div><div class="project-icon">☁️</div><div class="project-name">Cloud Upload Automation</div><div class="project-desc">High-speed API-based file upload to AWS S3. Optimized bandwidth, parallel uploads, automated pipeline integration.</div><div class="project-footer"><div class="project-tag">Python · AWS S3 · API</div></div></div>
+      <div class="project-card reveal"><div class="project-num">04 · AI</div><div class="project-icon">📨</div><div class="project-name">Automated Job Apply Engine</div><div class="project-desc">LinkedIn post → extract recruiter info → generate AI email → preview → auto-send with resume attached.</div><div class="project-footer"><div class="project-tag">Python · Selenium · Gmail API</div></div></div>
+      <div class="project-card reveal"><div class="project-num">05 · REDIRECT</div><div class="project-icon">🔀</div><div class="project-name">URL Redirect Monitor</div><div class="project-desc">Monitors and tracks URL redirect chains automatically — logging every hop, destination, and behavioral change across domains.</div><div class="project-footer"><div class="project-tag">Python · Selenium · Logging</div><div class="project-links"><a href="https://github.com/AbhishantKumar1602/url-redirect-monitorNew" class="project-link" target="_blank">⌨ GitHub</a></div></div></div>
+      <div class="project-card reveal"><div class="project-num">06 · UTILITY</div><div class="project-icon">🎬</div><div class="project-name">Video Speed + Timestamp Tool</div><div class="project-desc">Adjusts video playback speed and overlays original timestamps at any position. Multi-MIME type support.</div><div class="project-footer"><div class="project-tag">Python · FFmpeg · MIME</div></div></div>
+      <div class="project-card reveal"><div class="project-num">07 · UTILITY</div><div class="project-icon">🔔</div><div class="project-name">Notification Filter System</div><div class="project-desc">Manages Windows notification panel — keeps only whitelisted notifications, silently removes everything else.</div><div class="project-footer"><div class="project-tag">Python · Windows API</div></div></div>
+      <div class="project-card reveal"><div class="project-num">08 · DATA</div><div class="project-icon">📋</div><div class="project-name">Excel Comparison Engine</div><div class="project-desc">Compares two Excel datasets — extracts unique values, common values, and differences. Clean structured Excel output.</div><div class="project-footer"><div class="project-tag">Python · Pandas · Excel</div></div></div>
+      <div class="project-card reveal"><div class="project-num">09 · SYSTEM</div><div class="project-icon">🧹</div><div class="project-name">Windows Deep Cleanup Script</div><div class="project-desc">Admin-level cleanup: temp, prefetch, update cache, browser cache, Defender cache, thumbnails, Windows.old.</div><div class="project-footer"><div class="project-tag">Python · PowerShell · Windows</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FRAUD LAB -->
+<section id="fraud">
+  <div class="section-inner">
+    <div class="section-label reveal">// 006 — Fraud and Behavioral Intelligence</div>
+    <h2 class="section-title reveal">The <em>Fraud Lab</em></h2>
+    <p class="reveal" style="color:var(--dim);font-size:15px;margin-bottom:50px;max-width:640px;">Specialized tools built to detect, map, and expose affiliate fraud, coupon manipulation, and behavioral anomalies — all automated, all evidence-backed.</p>
+    <div class="fraud-grid">
+      <div class="fraud-item reveal"><div class="fraud-idx">01</div><div><div class="fraud-name">Coupon Site Scraper + Network Mapper</div><div class="fraud-desc">Scrapes all brand listings from coupon sites, follows every redirect to expose which affiliate network is running behind each coupon and where users actually land.</div></div></div>
+      <div class="fraud-item reveal"><div class="fraud-idx">02</div><div><div class="fraud-name">Clickjacking Detection Framework</div><div class="fraud-desc">Collects 10–20 pages of URLs from any keyword search, visits each domain, simulates random clicks, and detects hidden redirections or notification abuse traps.</div></div></div>
+      <div class="fraud-item reveal"><div class="fraud-idx">03</div><div><div class="fraud-name">Inline Adware Hunting System</div><div class="fraud-desc">Searches adware keywords across multiple engines, scrapes sponsored links, visits each, checks for keyword matches on landing pages, outputs full evidence with screenshots.</div></div></div>
+      <div class="fraud-item reveal"><div class="fraud-idx">04</div><div><div class="fraud-name">Extension Behavior Monitor</div><div class="fraud-desc">Tests any browser extension across multiple brand sites to detect injected cashback popups, discount overlays, or click-hijacking behavior during active user sessions.</div></div></div>
+      <div class="fraud-item reveal"><div class="fraud-idx">05</div><div><div class="fraud-name">Proxy Coupon Impact Analyzer</div><div class="fraud-desc">Identifies how many coupon sites operate on different proxy networks and exactly which affiliate networks are being affected — outputs a full impact analysis report.</div></div></div>
+      <div class="fraud-item reveal"><div class="fraud-idx">06</div><div><div class="fraud-name">Domain Redirect Tracker</div><div class="fraud-desc">Opens tracking and typo domains one by one and follows every redirect chain until the final landing destination is identified, logged, and confirmed.</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- STACK -->
+<section id="stack">
+  <div class="section-inner">
+    <div class="section-label reveal">// 007 — Tech Stack</div>
+    <h2 class="section-title reveal">Tools of the <em>Trade</em></h2>
+    <div class="reveal">
+      <div class="stack-row">
+        <div class="stack-item"><span class="stack-icon">🐍</span><div class="stack-name">Python</div></div>
+        <div class="stack-item"><span class="stack-icon">🤖</span><div class="stack-name">Selenium</div></div>
+        <div class="stack-item"><span class="stack-icon">⚡</span><div class="stack-name">TestNG</div></div>
+        <div class="stack-item"><span class="stack-icon">📋</span><div class="stack-name">Jira</div></div>
+        <div class="stack-item"><span class="stack-icon">📮</span><div class="stack-name">Postman</div></div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-item"><span class="stack-icon">🗄️</span><div class="stack-name">SQL</div></div>
+        <div class="stack-item"><span class="stack-icon">☁️</span><div class="stack-name">AWS S3</div></div>
+        <div class="stack-item"><span class="stack-icon">🍃</span><div class="stack-name">MongoDB</div></div>
+        <div class="stack-item"><span class="stack-icon">📊</span><div class="stack-name">Pandas</div></div>
+        <div class="stack-item"><span class="stack-icon">⚙️</span><div class="stack-name">GitHub Actions</div></div>
+      </div>
+      <div class="stack-row">
+        <div class="stack-item"><span class="stack-icon">🟢</span><div class="stack-name">Node.js</div></div>
+        <div class="stack-item"><span class="stack-icon">🔌</span><div class="stack-name">Socket.IO</div></div>
+        <div class="stack-item"><span class="stack-icon">🌐</span><div class="stack-name">JavaScript</div></div>
+        <div class="stack-item"><span class="stack-icon">🪟</span><div class="stack-name">PowerShell</div></div>
+        <div class="stack-item"><span class="stack-icon">🔎</span><div class="stack-name">Web Scraping</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+  <div class="section-inner">
+    <div class="section-label reveal">// 008 — Contact</div>
+    <h2 class="section-title reveal">Let's Build<br><em>Something</em></h2>
+    <div class="contact-wrap reveal">
+      <p class="contact-tagline">Open to QA, Automation, and Full-Stack roles.</p>
+      <p class="contact-sub">Whether it's a QA automation challenge, a fraud detection problem, or building something new end-to-end — reach out and let's talk.</p>
+      <div class="contact-links">
+        <a href="mailto:abhishantkumar1602@gmail.com" class="contact-link"><span class="link-icon">✉️</span>Send Email</a>
+        <a href="https://www.linkedin.com/in/abhishant-kumar-372b18279/" class="contact-link" target="_blank"><span class="link-icon">💼</span>LinkedIn</a>
+        <a href="https://github.com/AbhishantKumar1602" class="contact-link" target="_blank"><span class="link-icon">⌨️</span>GitHub</a>
+        <a href="#" class="contact-link resume-dl" id="resumeBtn"><span class="link-icon">⬇</span>Download Resume</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="footer-text">© 2026 <span>Abhishant Kumar</span> · All Systems Operational</div>
+  <div class="footer-text">QA Engineer · Systems Builder · <span>Open to Work</span></div>
+</footer>
+
+<script>
+/* CURSOR */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+document.body.style.cursor = 'none';
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e=>{mx=e.clientX;my=e.clientY;cursor.style.left=mx-4+'px';cursor.style.top=my-4+'px';});
+(function animRing(){rx+=(mx-rx-16)*0.15;ry+=(my-ry-16)*0.15;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(animRing);})();
+document.querySelectorAll('a,button,.project-card,.fraud-item,.stack-item,.test-type-card,.agile-card,.qa-skill-row,.live-card,.timeline-item').forEach(el=>{
+  el.addEventListener('mouseenter',()=>{cursor.style.transform='scale(2)';ring.style.transform='scale(1.5)';ring.style.borderColor='var(--green)';});
+  el.addEventListener('mouseleave',()=>{cursor.style.transform='scale(1)';ring.style.transform='scale(1)';ring.style.borderColor='var(--cyan)';});
+});
+
+/* SCROLL REVEAL + SKILL BARS */
+const observer = new IntersectionObserver(entries=>{
+  entries.forEach((e,i)=>{
+    if(e.isIntersecting){
+      setTimeout(()=>{
+        e.target.classList.add('visible');
+        e.target.querySelectorAll('.qa-skill-fill').forEach(bar=>{
+          const w=bar.getAttribute('data-width');
+          if(w) bar.style.width=w+'%';
+        });
+      },i*60);
+    }
+  });
+},{threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el=>observer.observe(el));
+
+/* GLITCH HERO */
+const heroName=document.querySelector('.hero-name .glitch');
+if(heroName){
+  let gt;
+  heroName.addEventListener('mouseenter',()=>{gt=setInterval(()=>{heroName.style.textShadow=`${Math.random()*6-3}px 0 #ff2d55,${Math.random()*6-3}px 0 #00fff5`;setTimeout(()=>heroName.style.textShadow='none',100);},200);});
+  heroName.addEventListener('mouseleave',()=>{clearInterval(gt);heroName.style.textShadow='none';});
+}
+
+/* RESUME BUTTON — generates a printable page */
+document.getElementById('resumeBtn').addEventListener('click', e=>{
+  e.preventDefault();
+  const w = window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Abhishant Kumar — Resume</title>
+  <style>
+    *{margin:0;padding:0;box-sizing:border-box;}
+    body{font-family:'Segoe UI',Arial,sans-serif;color:#111;background:#fff;padding:40px;max-width:860px;margin:0 auto;font-size:13px;line-height:1.6;}
+    h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;}
+    .sub{color:#555;font-size:13px;margin-bottom:12px;}
+    .links{display:flex;gap:20px;font-size:12px;color:#0066cc;margin-bottom:20px;}
+    .links a{color:#0066cc;text-decoration:none;}
+    hr{border:none;border-top:2px solid #111;margin:16px 0 14px;}
+    .thin-hr{border-top:1px solid #ddd;margin:10px 0;}
+    h2{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#333;margin-bottom:10px;}
+    .exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
+    .role{font-weight:700;font-size:14px;}
+    .company{color:#555;font-size:12px;}
+    .period{font-size:11px;color:#888;white-space:nowrap;}
+    ul{padding-left:16px;margin:8px 0;}
+    ul li{margin-bottom:4px;font-size:12px;}
+    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
+    .tag{font-size:10px;border:1px solid #ccc;padding:2px 8px;border-radius:2px;color:#333;}
+    .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .skill-group{}
+    .skill-group-title{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;color:#333;}
+    .skill-list{font-size:12px;color:#444;}
+    .projects-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .proj{border:1px solid #eee;padding:10px;border-radius:2px;}
+    .proj-name{font-weight:700;font-size:12px;}
+    .proj-desc{font-size:11px;color:#555;margin-top:3px;}
+    .proj-link{font-size:10px;color:#0066cc;margin-top:4px;}
+    @media print{body{padding:20px;}.no-print{display:none;}}
+  </style></head><body>
+  <button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;background:#000;color:#fff;border:none;padding:10px 20px;cursor:pointer;font-size:13px;font-family:monospace;letter-spacing:1px;">⬇ PRINT / SAVE PDF</button>
+  <h1>Abhishant Kumar</h1>
+  <div class="sub">QA Automation Engineer · Systems Developer</div>
+  <div class="links">
+    <a href="https://www.linkedin.com/in/abhishant-kumar-372b18279/">linkedin.com/in/abhishant-kumar</a>
+    <a href="https://github.com/AbhishantKumar1602">github.com/AbhishantKumar1602</a>
+    <span>📍 Gurugram, India</span>
+  </div>
+  <hr/>
+  <h2>Experience</h2>
+  <div class="exp-header"><div><div class="role">QA Automation Engineer</div><div class="company">Virus Positive Technologies · Full-Time</div></div><div class="period">Dec 2023 – Present</div></div>
+  <ul>
+    <li>Designed and built 17+ automation scripts eliminating 100% of manual repetitive workflows</li>
+    <li>Built end-to-end QA suites covering functional, API, regression, security, and database testing (94%+ coverage)</li>
+    <li>Engineered a Fraud & Behavioral Intelligence Lab — clickjacking detection, adware hunting, extension behavior monitoring</li>
+    <li>Developed Dashboard Reconstruction Engine intercepting API calls and exporting validated Excel reports</li>
+    <li>Created AWS S3 cloud upload automation for high-speed, pipeline-ready file operations</li>
+    <li>Worked in Agile/Scrum sprints with Jira bug tracking and sprint-based test planning</li>
+    <li>Conducted SQL-based database validation to independently verify backend data integrity</li>
+  </ul>
+  <div class="tags"><span class="tag">Python</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag">SQL</span><span class="tag">TestNG</span><span class="tag">Agile</span><span class="tag">AWS S3</span><span class="tag">REST API</span><span class="tag">GitHub Actions</span></div>
+  <div class="thin-hr" style="margin-top:14px;"></div>
+  <div class="exp-header" style="margin-top:10px;"><div><div class="role">Back End Developer — Internship</div><div class="company">Smart Programming And Development · Chandigarh</div></div><div class="period">Mar 2023 – Sep 2023 (7 months)</div></div>
+  <ul>
+    <li>Developed backend systems using Python and PHP; built web apps with Laravel framework</li>
+    <li>Automated web workflows using Selenium; implemented CRUD operations for application data</li>
+    <li>Managed and optimized MySQL databases; followed Git version control best practices</li>
+  </ul>
+  <div class="tags"><span class="tag">Python</span><span class="tag">PHP</span><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">Selenium</span><span class="tag">Git</span></div>
+  <hr/>
+  <h2>Skills</h2>
+  <div class="skills-grid">
+    <div class="skill-group"><div class="skill-group-title">QA & Testing</div><div class="skill-list">Selenium WebDriver, TestNG, REST API Testing, SQL Testing, Postman, Test Case Design, STLC, Jira, Agile/Scrum, GitHub Actions, Cross-browser Testing, Security Testing</div></div>
+    <div class="skill-group"><div class="skill-group-title">Development</div><div class="skill-list">Python, Node.js, Express, JavaScript, HTML/CSS, Socket.IO, MongoDB, AWS S3, Pandas, PowerShell, Web Scraping, Excel Automation</div></div>
+  </div>
+  <hr/>
+  <h2>Live Projects</h2>
+  <div class="projects-list">
+    <div class="proj"><div class="proj-name">ShopX E-Commerce</div><div class="proj-desc">Full SRS-to-production e-commerce app with auth, cart, checkout, payment simulation, orders — live APIs</div><div class="proj-link"><a href="https://shopxecom.netlify.app/">shopxecom.netlify.app</a></div></div>
+    <div class="proj"><div class="proj-name">AK Tunes — Music Streaming</div><div class="proj-desc">API-driven music platform with real-time search, dynamic artwork, fallback architecture</div><div class="proj-link"><a href="https://aktunes.netlify.app/">aktunes.netlify.app</a></div></div>
+    <div class="proj"><div class="proj-name">AK Chat App</div><div class="proj-desc">Real-time chat with Socket.IO, room support, live presence — Node.js backend</div><div class="proj-link"><a href="https://ak-chatting.onrender.com/">ak-chatting.onrender.com</a></div></div>
+    <div class="proj"><div class="proj-name">URL Intelligence Shortener</div><div class="proj-desc">Short URL generation with hit tracking, analytics, and landing destination logging</div><div class="proj-link"><a href="https://url-shortener-skal.onrender.com/">url-shortener-skal.onrender.com</a></div></div>
+    <div class="proj"><div class="proj-name">AK AirBnb Homes</div><div class="proj-desc">Airbnb-inspired property listing platform — Node.js, MongoDB, full CRUD</div><div class="proj-link"><a href="https://ak-airbnbhomes.onrender.com/">ak-airbnbhomes.onrender.com</a></div></div>
+    <div class="proj"><div class="proj-name">VPT Server Monitor Tool</div><div class="proj-desc">Admin-protected server listing and management tool built for operational use</div><div class="proj-link"><a href="https://vptservermonitortool.onrender.com/">vptservermonitortool.onrender.com</a></div></div>
+  </div>
+  <hr/>
+  <h2>Automation Tools Built</h2>
+  <ul>
+    <li>Punch-In/Out Engine · Dashboard Reconstruction Engine · Cloud Upload Automation (AWS S3)</li>
+    <li>Automated Job Apply Engine · URL Redirect Monitor · Extension Market Scraper</li>
+    <li>Clickjacking Detection Framework · Inline Adware Hunter · Extension Behavior Monitor</li>
+    <li>Proxy Coupon Impact Analyzer · Domain Redirect Tracker · Excel Comparison Engine</li>
+    <li>Windows Deep Cleanup Script · Punch Automation Monitor</li>
+  </ul>
+  <hr/>
+  <h2>Education</h2>
+  <div style="margin-bottom:8px;"><div class="role">Bachelor of Computer Applications (BCA)</div><div class="company">Chandigarh University · 2020–2023</div></div>
+  </body></html>`);
+  w.document.close();
+});
+</script>
+</body>
+</html>
