@@ -315,7 +315,7 @@ footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify
   </ul>
   <div class="nav-right">
     <div class="nav-status"><div class="status-dot"></div>available for work</div>
-    <a href="#contact" class="nav-resume"><span>⬇ Resume</span></a>
+    <a href="ABHISHANT_KUMAR_FINAL.pdf" download="Abhishant_Kumar_Resume.pdf" class="nav-resume"><span>⬇ Resume</span></a>
   </div>
 </nav>
 
@@ -332,7 +332,7 @@ footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify
   <div class="hero-cta">
     <a href="#qa" class="btn"><span>› QA Profile</span></a>
     <a href="#live" class="btn btn-ghost"><span>→ Live Projects</span></a>
-    <a href="#contact" class="btn btn-green"><span>⬇ Resume</span></a>
+    <a href="ABHISHANT_KUMAR_FINAL.pdf" download="Abhishant_Kumar_Resume.pdf" class="btn btn-green"><span>⬇ Resume</span></a>
   </div>
   <div class="hero-stats">
     <div class="stat"><div class="stat-num">2+</div><div class="stat-label">Years QA Exp</div></div>
@@ -817,10 +817,10 @@ footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify
       <p class="contact-tagline">Open to QA, Automation, and Full-Stack roles.</p>
       <p class="contact-sub">Whether it's a QA automation challenge, a fraud detection problem, or building something new end-to-end — reach out and let's talk.</p>
       <div class="contact-links">
-        <a href="mailto:abhishantkumar1602@gmail.com" class="contact-link"><span class="link-icon">✉️</span>Send Email</a>
+        <a href="/cdn-cgi/l/email-protection#3f5e5d57564c575e514b544a525e4d0e090f0d7f58525e5653115c5052" class="contact-link"><span class="link-icon">✉️</span>Send Email</a>
         <a href="https://www.linkedin.com/in/abhishant-kumar-372b18279/" class="contact-link" target="_blank"><span class="link-icon">💼</span>LinkedIn</a>
         <a href="https://github.com/AbhishantKumar1602" class="contact-link" target="_blank"><span class="link-icon">⌨️</span>GitHub</a>
-        <a href="#" class="contact-link resume-dl" id="resumeBtn"><span class="link-icon">⬇</span>Download Resume</a>
+        <a href="ABHISHANT_KUMAR_FINAL.pdf" download="Abhishant_Kumar_Resume.pdf" class="contact-link resume-dl" id="resumeBtn"><span class="link-icon">⬇</span>Download Resume</a>
       </div>
     </div>
   </div>
@@ -831,7 +831,7 @@ footer{border-top:1px solid var(--border);padding:28px 60px;display:flex;justify
   <div class="footer-text">QA Engineer · Systems Builder · <span>Open to Work</span></div>
 </footer>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 /* CURSOR */
 const cursor = document.getElementById('cursor');
 const ring   = document.getElementById('cursorRing');
@@ -868,100 +868,8 @@ if(heroName){
   heroName.addEventListener('mouseleave',()=>{clearInterval(gt);heroName.style.textShadow='none';});
 }
 
-/* RESUME BUTTON — generates a printable page */
-document.getElementById('resumeBtn').addEventListener('click', e=>{
-  e.preventDefault();
-  const w = window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Abhishant Kumar — Resume</title>
-  <style>
-    *{margin:0;padding:0;box-sizing:border-box;}
-    body{font-family:'Segoe UI',Arial,sans-serif;color:#111;background:#fff;padding:40px;max-width:860px;margin:0 auto;font-size:13px;line-height:1.6;}
-    h1{font-size:28px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;}
-    .sub{color:#555;font-size:13px;margin-bottom:12px;}
-    .links{display:flex;gap:20px;font-size:12px;color:#0066cc;margin-bottom:20px;}
-    .links a{color:#0066cc;text-decoration:none;}
-    hr{border:none;border-top:2px solid #111;margin:16px 0 14px;}
-    .thin-hr{border-top:1px solid #ddd;margin:10px 0;}
-    h2{font-size:13px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#333;margin-bottom:10px;}
-    .exp-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px;}
-    .role{font-weight:700;font-size:14px;}
-    .company{color:#555;font-size:12px;}
-    .period{font-size:11px;color:#888;white-space:nowrap;}
-    ul{padding-left:16px;margin:8px 0;}
-    ul li{margin-bottom:4px;font-size:12px;}
-    .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;}
-    .tag{font-size:10px;border:1px solid #ccc;padding:2px 8px;border-radius:2px;color:#333;}
-    .skills-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-    .skill-group{}
-    .skill-group-title{font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;color:#333;}
-    .skill-list{font-size:12px;color:#444;}
-    .projects-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-    .proj{border:1px solid #eee;padding:10px;border-radius:2px;}
-    .proj-name{font-weight:700;font-size:12px;}
-    .proj-desc{font-size:11px;color:#555;margin-top:3px;}
-    .proj-link{font-size:10px;color:#0066cc;margin-top:4px;}
-    @media print{body{padding:20px;}.no-print{display:none;}}
-  </style></head><body>
-  <button class="no-print" onclick="window.print()" style="position:fixed;top:20px;right:20px;background:#000;color:#fff;border:none;padding:10px 20px;cursor:pointer;font-size:13px;font-family:monospace;letter-spacing:1px;">⬇ PRINT / SAVE PDF</button>
-  <h1>Abhishant Kumar</h1>
-  <div class="sub">QA Automation Engineer · Systems Developer</div>
-  <div class="links">
-    <a href="https://www.linkedin.com/in/abhishant-kumar-372b18279/">linkedin.com/in/abhishant-kumar</a>
-    <a href="https://github.com/AbhishantKumar1602">github.com/AbhishantKumar1602</a>
-    <span>📍 Gurugram, India</span>
-  </div>
-  <hr/>
-  <h2>Experience</h2>
-  <div class="exp-header"><div><div class="role">QA Automation Engineer</div><div class="company">Virus Positive Technologies · Full-Time</div></div><div class="period">Dec 2023 – Present</div></div>
-  <ul>
-    <li>Designed and built 17+ automation scripts eliminating 100% of manual repetitive workflows</li>
-    <li>Built end-to-end QA suites covering functional, API, regression, security, and database testing (94%+ coverage)</li>
-    <li>Engineered a Fraud & Behavioral Intelligence Lab — clickjacking detection, adware hunting, extension behavior monitoring</li>
-    <li>Developed Dashboard Reconstruction Engine intercepting API calls and exporting validated Excel reports</li>
-    <li>Created AWS S3 cloud upload automation for high-speed, pipeline-ready file operations</li>
-    <li>Worked in Agile/Scrum sprints with Jira bug tracking and sprint-based test planning</li>
-    <li>Conducted SQL-based database validation to independently verify backend data integrity</li>
-  </ul>
-  <div class="tags"><span class="tag">Python</span><span class="tag">Selenium</span><span class="tag">Jira</span><span class="tag">SQL</span><span class="tag">TestNG</span><span class="tag">Agile</span><span class="tag">AWS S3</span><span class="tag">REST API</span><span class="tag">GitHub Actions</span></div>
-  <div class="thin-hr" style="margin-top:14px;"></div>
-  <div class="exp-header" style="margin-top:10px;"><div><div class="role">Back End Developer — Internship</div><div class="company">Smart Programming And Development · Chandigarh</div></div><div class="period">Mar 2023 – Sep 2023 (7 months)</div></div>
-  <ul>
-    <li>Developed backend systems using Python and PHP; built web apps with Laravel framework</li>
-    <li>Automated web workflows using Selenium; implemented CRUD operations for application data</li>
-    <li>Managed and optimized MySQL databases; followed Git version control best practices</li>
-  </ul>
-  <div class="tags"><span class="tag">Python</span><span class="tag">PHP</span><span class="tag">Laravel</span><span class="tag">MySQL</span><span class="tag">Selenium</span><span class="tag">Git</span></div>
-  <hr/>
-  <h2>Skills</h2>
-  <div class="skills-grid">
-    <div class="skill-group"><div class="skill-group-title">QA & Testing</div><div class="skill-list">Selenium WebDriver, TestNG, REST API Testing, SQL Testing, Postman, Test Case Design, STLC, Jira, Agile/Scrum, GitHub Actions, Cross-browser Testing, Security Testing</div></div>
-    <div class="skill-group"><div class="skill-group-title">Development</div><div class="skill-list">Python, Node.js, Express, JavaScript, HTML/CSS, Socket.IO, MongoDB, AWS S3, Pandas, PowerShell, Web Scraping, Excel Automation</div></div>
-  </div>
-  <hr/>
-  <h2>Live Projects</h2>
-  <div class="projects-list">
-    <div class="proj"><div class="proj-name">ShopX E-Commerce</div><div class="proj-desc">Full SRS-to-production e-commerce app with auth, cart, checkout, payment simulation, orders — live APIs</div><div class="proj-link"><a href="https://shopxecom.netlify.app/">shopxecom.netlify.app</a></div></div>
-    <div class="proj"><div class="proj-name">AK Tunes — Music Streaming</div><div class="proj-desc">API-driven music platform with real-time search, dynamic artwork, fallback architecture</div><div class="proj-link"><a href="https://aktunes.netlify.app/">aktunes.netlify.app</a></div></div>
-    <div class="proj"><div class="proj-name">AK Chat App</div><div class="proj-desc">Real-time chat with Socket.IO, room support, live presence — Node.js backend</div><div class="proj-link"><a href="https://ak-chatting.onrender.com/">ak-chatting.onrender.com</a></div></div>
-    <div class="proj"><div class="proj-name">URL Intelligence Shortener</div><div class="proj-desc">Short URL generation with hit tracking, analytics, and landing destination logging</div><div class="proj-link"><a href="https://url-shortener-skal.onrender.com/">url-shortener-skal.onrender.com</a></div></div>
-    <div class="proj"><div class="proj-name">AK AirBnb Homes</div><div class="proj-desc">Airbnb-inspired property listing platform — Node.js, MongoDB, full CRUD</div><div class="proj-link"><a href="https://ak-airbnbhomes.onrender.com/">ak-airbnbhomes.onrender.com</a></div></div>
-    <div class="proj"><div class="proj-name">VPT Server Monitor Tool</div><div class="proj-desc">Admin-protected server listing and management tool built for operational use</div><div class="proj-link"><a href="https://vptservermonitortool.onrender.com/">vptservermonitortool.onrender.com</a></div></div>
-  </div>
-  <hr/>
-  <h2>Automation Tools Built</h2>
-  <ul>
-    <li>Punch-In/Out Engine · Dashboard Reconstruction Engine · Cloud Upload Automation (AWS S3)</li>
-    <li>Automated Job Apply Engine · URL Redirect Monitor · Extension Market Scraper</li>
-    <li>Clickjacking Detection Framework · Inline Adware Hunter · Extension Behavior Monitor</li>
-    <li>Proxy Coupon Impact Analyzer · Domain Redirect Tracker · Excel Comparison Engine</li>
-    <li>Windows Deep Cleanup Script · Punch Automation Monitor</li>
-  </ul>
-  <hr/>
-  <h2>Education</h2>
-  <div style="margin-bottom:8px;"><div class="role">Bachelor of Computer Applications (BCA)</div><div class="company">Chandigarh University · 2020–2023</div></div>
-  </body></html>`);
-  w.document.close();
-});
+/* RESUME BUTTON — downloads PDF directly */
+// Download is handled via the href + download attributes on the anchor tag
 </script>
 </body>
 </html>
